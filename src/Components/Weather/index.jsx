@@ -15,13 +15,17 @@ function Weather() {
   const [autoError , setAutoError] = useState(false);
   const [autocomplete, setAutocomplete] = useState(null);
   const [fillup, setFillup] = useState(false);
- const { isLoaded } = useLoadScript({
-      googleMapsApiKey: "AIzaSyBlvhAbj-4iRbkxJROMY9td2LFDrmghyYg",
+  const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+  const weatherApiKey = process.env.REACT_APP_WEATHER_API_KEY;
+  const { isLoaded } = useLoadScript({
+      googleMapsApiKey,
       libraries,
   }); 
 
   const handleLoad = (autoC) => setAutocomplete(autoC);
   const clear = () => {document.getElementById('outlined-basic').value = ''};
+ 
+
 
   // Get the city name from the Google API
   const handlePlaceChanged = () => {
@@ -63,15 +67,7 @@ function Weather() {
     fetchDataSequentially();
   }, [city]);
 
-  const showErrorMessage = () => {
-    if (error) {
-      return <Alert severity="error">{error}</Alert>;
-    }
-    return null;
-  }; 
-
   // API weather key and url
-  const API_KEY = '9969d5c1e78d4bb3b4421334232811';
   const API_URL = 'https://api.weatherapi.com/v1/current.json';
   const API_URL2 = 'https://api.weatherapi.com/v1/forecast.json'; 
 
@@ -82,7 +78,7 @@ const fetchData = async () => {
   try {
     const response = await axios.get(API_URL, {
       params: {
-        key: API_KEY,
+        key: weatherApiKey,
         q: city,
       },
     });
@@ -100,7 +96,7 @@ const fetchData2 = async () => {
   try {
     const response = await axios.get(API_URL2, {
       params: {
-        key: API_KEY,
+        key: weatherApiKey,
         q: city,
         days: 3,
       },
@@ -147,8 +143,8 @@ const handleFill = () => {
 } 
   return (
     <WeatherContainer disableGutters maxWidth='true'>
-     {showErrorMessage()} 
      {autoError && <Alert className='alert' severity="error">Please select a city from the dropdown menu</Alert>}
+     {error && <Alert className='alert' severity="error">{error}</Alert>}
     {weatherData && <WeatherText id='city' className='city'>{weatherData.location?.name}</WeatherText>}
      <WeatherBox id="change" boxShadow={5} fillup={fillup} >
       <SearchWrapper component=''>
