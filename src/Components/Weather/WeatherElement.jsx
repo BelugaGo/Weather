@@ -126,7 +126,7 @@ border: ${props => props.fillup ? '5px solid #006BA6' : '5px solid #fff'};
 width: 90%;
 height: auto;
 border-radius: 15px;
-//position: relative;
+position: relative;
 z-index: 1;
 transition: all 0.5s ease-in-out;
 
